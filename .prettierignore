@@ -1,0 +1,7 @@
+node_modules
+dist
+*.svg
+*.md
+yarn.lock
+public
+.github

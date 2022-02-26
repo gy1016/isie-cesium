@@ -1,0 +1,30 @@
+/* --------------------------------------------
+绝对定位
+--------------------------------------------- */
+@mixin absolute($top: 0, $right: 0, $bottom: 0, $left: 0) {
+  position: absolute;
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+}
+
+/* --------------------------------------------
+flex布局
+--------------------------------------------- */
+@mixin flex($row: row, $justify-content: flex-start, $align-items: flex-start, $wrap: nowrap) {
+  display: flex;
+  flex-flow: $row $wrap;
+  justify-content: $justify-content;
+  align-items: $align-items;
+}
+
+/* --------------------------------------------
+省略号
+--------------------------------------------- */
+@mixin ellipsis() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

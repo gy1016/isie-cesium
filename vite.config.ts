@@ -12,4 +12,11 @@ export default defineConfig({
       '#': resolve(__dirname, 'types'),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: "@import 'src/styles/index.scss';",
+      },
+    },
+  },
 });
