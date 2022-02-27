@@ -1,0 +1,40 @@
+name: isie
+
+on: 
+  push: 
+    branches: 
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install and Build
+        run: |
+          npm install
+          npm run build --if-present
+          cd dist
+          tar --exclude=stats.json -czvf dist.tar *
+
+      - name: Deploy
+        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+        env:
+          WELCOME: "ssh scp ssh pipelines"
+          LASTSSH: "Doing something after copying"
+        with:
+          host: ${{ secrets.DR_HOST }}
+          user: ${{ secrets.DR_USER }}
+          key: ${{ secrets.DR_KEY }}
+          connect_timeout: 10s
+          first_ssh: |
+            rm -rf /www/wwwroot/projects/isie
+            mkdir -p /www/wwwroot/projects/isie
+          scp: |
+            ./dist/dist.tar => /www/wwwroot/projects/isie
+          last_ssh: |
+            cd /www/wwwroot/projects/isie
+            tar -xzvf dist.tar
+            rm dist.tar
