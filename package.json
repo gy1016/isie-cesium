@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vue-tsc --noEmit && vite build --base=/isie/",
     "preview": "vite preview",
     "install:husky": "husky install",
     "lint:pretty": "pretty-quick --staged",
@@ -42,6 +42,7 @@
     "typescript": "^4.5.4",
     "vite": "^2.8.0",
     "vite-plugin-cesium": "^1.2.13",
+    "vite-plugin-compression": "^0.5.1",
     "vue-tsc": "^0.29.8"
   }
 }
