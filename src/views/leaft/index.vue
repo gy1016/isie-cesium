@@ -3,31 +3,80 @@
 </template>
 
 <script setup lang="ts">
-  import L from 'leaflet';
+  import L, { LeafletMouseEvent } from 'leaflet';
   import 'leaflet/dist/leaflet.css';
   import { onMounted } from 'vue';
+  import Worker from '@/worker/point?worker';
+
+  const locateFeatureLevel = 12;
+  let worker = new Worker();
+  let ready = false;
+
+  const createClusterIcon = (feature, latlng) => {
+    if (!feature.properties.cluster) return L.marker(latlng);
+    const count = feature.properties.point_count;
+    const size = count < 100 ? 'small' : count < 1000 ? 'medium' : 'large';
+    const icon = L.divIcon({
+      html: `<div><span>${feature.properties.point_count_abbreviated}</span></div>`,
+      className: `marker-cluster marker-cluster-${size}`,
+      iconSize: L.point(40, 40),
+    });
+    return L.marker(latlng, { icon });
+  };
+
+  const update = (map: any, ready: boolean) => {
+    if (!ready) return;
+    const bounds = map.getBounds();
+    worker.postMessage({
+      bbox: [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()],
+      zoom: map.getZoom(),
+    });
+  };
 
   onMounted(() => {
-    const leafLetMap = L.map('leaft-map').setView([51.505, -0.09], 13);
+    const leafLetMap = L.map('leaft-map').setView({ lat: 23.56, lng: 113.23 }, 5);
     L.tileLayer(
-      'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}',
+      'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
       {
-        attribution:
-          'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        maxZoom: 18,
-        id: 'mapbox/streets-v11',
-        tileSize: 512,
-        zoomOffset: -1,
-        accessToken:
-          'pk.eyJ1IjoieXN5MTAxNiIsImEiOiJja3h4MG9jczA2aXd1MnpreXQ3d2N5OGh2In0.qgEzfhABh2yAmTZotdneZQ',
+        opacity: 1,
       },
     ).addTo(leafLetMap);
+
+    const markers = L.geoJSON(undefined, {
+      pointToLayer: createClusterIcon,
+    }).addTo(leafLetMap);
+
+    leafLetMap.on('moveend', function onMoveendMap() {
+      let zoom = leafLetMap.getZoom();
+      if (zoom >= locateFeatureLevel) {
+        markers.removeFrom(leafLetMap);
+      } else {
+        markers.addTo(leafLetMap);
+      }
+      update(leafLetMap, ready);
+    });
+
+    worker.onmessage = function (e) {
+      if (e.data.ready) {
+        ready = true;
+        update(leafLetMap, ready);
+      } else if (e.data.expansionZoom) {
+        leafLetMap.flyTo(e.data.center, e.data.expansionZoom);
+      } else {
+        markers.clearLayers();
+        markers.addData(e.data);
+      }
+    };
+
+    markers.on('click', (e: LeafletMouseEvent) => {
+      if (e.layer.feature.properties.cluster_id) {
+        worker.postMessage({
+          getClusterExpansionZoom: e.layer.feature.properties.cluster_id,
+          center: e.latlng,
+        });
+      }
+    });
   });
 </script>
 
-<style lang="scss" scoped>
-  #leaft-map {
-    height: 100%;
-    width: 100%;
-  }
-</style>
+<style src="./index.scss"></style>

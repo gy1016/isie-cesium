@@ -20,4 +20,9 @@ export default defineConfig({
       },
     },
   },
+  server: {
+    proxy: {
+      '^/json/.*': 'http://121.199.160.202/',
+    },
+  },
 });
