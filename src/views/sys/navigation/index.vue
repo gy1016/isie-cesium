@@ -44,6 +44,12 @@
       background: '#8D65E8',
     },
     {
+      name: '湖北碳汇',
+      path: 'openlayers',
+      icon: 'icon-map',
+      background: '#A8B260',
+    },
+    {
       name: '隐患管理',
       path: 'incident',
       icon: 'icon-incident',

@@ -27,6 +27,11 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/leaft/index.vue'),
       },
       {
+        path: 'openlayers',
+        name: 'Openlayers',
+        component: () => import('@/views/openlayers/index.vue'),
+      },
+      {
         path: 'incident',
         name: 'Incident',
         component: () => import('@/views/incident/index.vue'),
