@@ -35,3 +35,10 @@ declare interface BaseTableConfig extends AnyObject {
   isFrontPage?: boolean; // 是否前端分页
   showSummary?: boolean; // 是否末尾显示统计行
 }
+
+interface ILayers {
+  id: number;
+  label: string;
+  layer: any;
+  initVis?: boolean;
+}

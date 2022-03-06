@@ -24,28 +24,11 @@
   import { defaults } from 'ol/control';
   import LayerControl from '@/components/LayerControl.vue';
 
+  let olMap: Map;
   let isShow = ref(false);
   const toggleLayers = () => {
     isShow.value = !isShow.value;
   };
-
-  let layers = ref([
-    {
-      label: 'C_M11.tif',
-    },
-    {
-      label: 'C_M12.tif',
-    },
-    {
-      label: 'C_M13.tif',
-    },
-    {
-      label: 'C_M14.tif',
-    },
-    {
-      label: 'C_M15.tif',
-    },
-  ]);
 
   const projection = new Projection({
     code: 'EPSG:4326',
@@ -61,7 +44,7 @@
     6.705522537231445e-7, 3.3527612686157227e-7,
   ];
 
-  const constructSource = (): WMTS => {
+  const constructSource = (layerName: string): WMTS => {
     let url = 'http://121.199.160.202:8081/geoserver/gwc/service/wmts?';
     let baseParams = [
       'VERSION',
@@ -75,8 +58,8 @@
 
     const params = {
       VERSION: '1.0.0',
-      LAYER: 'gy_workspace:C_M11.Npp_500m.tif',
-      STYLE: '',
+      LAYER: `gy_workspace:${layerName}.Npp_500m.tif`,
+      STYLE: 'gy_workspace:C_M_Npp',
       TILEMATRIX: [
         'EPSG:4326:0',
         'EPSG:4326:1',
@@ -132,16 +115,105 @@
     return source;
   };
 
+  let layers = ref<ILayers[]>([
+    {
+      id: 0,
+      label: '街道底图',
+      layer: new TileLayer({
+        source: new OSM(),
+      }),
+      initVis: true,
+    },
+    {
+      id: 1,
+      label: 'C_M11.tif',
+      layer: new TileLayer({
+        source: constructSource('C_M11'),
+      }),
+      initVis: true,
+    },
+    {
+      id: 2,
+      label: 'C_M12.tif',
+      layer: new TileLayer({
+        source: constructSource('C_M12'),
+      }),
+      initVis: false,
+    },
+    {
+      id: 3,
+      label: 'C_M13.tif',
+      layer: new TileLayer({
+        source: constructSource('C_M13'),
+      }),
+      initVis: false,
+    },
+    {
+      id: 4,
+      label: 'C_M14.tif',
+      layer: new TileLayer({
+        source: constructSource('C_M14'),
+      }),
+      initVis: false,
+    },
+    {
+      id: 5,
+      label: 'C_M15.tif',
+      layer: new TileLayer({
+        source: constructSource('C_M15'),
+      }),
+      initVis: false,
+    },
+    {
+      id: 6,
+      label: 'C_M16.tif',
+      layer: new TileLayer({
+        source: constructSource('C_M16'),
+      }),
+      initVis: false,
+    },
+    {
+      id: 7,
+      label: 'C_M17.tif',
+      layer: new TileLayer({
+        source: constructSource('C_M17'),
+      }),
+      initVis: false,
+    },
+    {
+      id: 8,
+      label: 'C_M18.tif',
+      layer: new TileLayer({
+        source: constructSource('C_M18'),
+      }),
+      initVis: false,
+    },
+    {
+      id: 9,
+      label: 'C_M19.tif',
+      layer: new TileLayer({
+        source: constructSource('C_M19'),
+      }),
+      initVis: false,
+    },
+    {
+      id: 10,
+      label: 'C_M20.tif',
+      layer: new TileLayer({
+        source: constructSource('C_M20'),
+      }),
+      initVis: false,
+    },
+  ]);
+
   onMounted(() => {
-    const olMap = new Map({
-      layers: [
-        new TileLayer({
-          source: new OSM(),
-        }),
-        new TileLayer({
-          source: constructSource(),
-        }),
-      ],
+    layers.value.forEach((item) => {
+      if (!item.initVis) {
+        item.layer.setVisible(false);
+      }
+    });
+    olMap = new Map({
+      layers: layers.value.map((l) => l.layer) as any,
       target: 'ol-map',
       view: new View({
         center: [0, 0],

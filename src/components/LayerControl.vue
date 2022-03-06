@@ -1,6 +1,12 @@
 <template>
   <div id="layer-control-panel" :class="props.isShow ? '' : 'h'">
-    <el-tree :data="props.layers" />
+    <el-tree
+      :data="props.layers"
+      show-checkbox
+      node-key="id"
+      :default-checked-keys="[0]"
+      @check-change="toggleVisble"
+    />
     <el-button :icon="DArrowLeft" :class="['btn-hide-layers']" @click="hidenLayers" />
   </div>
 </template>
@@ -9,7 +15,7 @@
   import { DArrowLeft } from '@element-plus/icons-vue';
 
   const props = defineProps<{
-    layers: any;
+    layers: ILayers[];
     isShow: boolean;
   }>();
 
@@ -19,6 +25,10 @@
 
   const hidenLayers = () => {
     emits('hide:isShow', false);
+  };
+
+  const toggleVisble = (node: any, checked: boolean) => {
+    node.layer.setVisible(checked);
   };
 </script>
 
