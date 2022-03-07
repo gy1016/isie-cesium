@@ -36,6 +36,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Incident',
         component: () => import('@/views/incident/index.vue'),
       },
+      {
+        path: 'terrian',
+        name: 'Terrian',
+        component: () => import('@/views/terrian/index.vue'),
+      },
     ],
   },
   { path: '/login', name: 'Login', component: Login },

@@ -55,6 +55,12 @@
       icon: 'icon-incident',
       background: '#D8B260',
     },
+    {
+      name: '地形展示',
+      path: 'terrian',
+      icon: 'icon-incident',
+      background: '#B8B260',
+    },
   ];
 
   const menuItemClick = (path: string) => {
