@@ -330,6 +330,7 @@
 
   onMounted(() => {
     main();
+    console.log('纹理加载成功：', initTexSuccess);
   });
 </script>
 
