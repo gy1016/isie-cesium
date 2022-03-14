@@ -46,7 +46,7 @@
     {
       name: '湖北碳汇',
       path: 'openlayers',
-      icon: 'icon-map',
+      icon: 'icon-carbon',
       background: '#A8B260',
     },
     {
@@ -58,7 +58,7 @@
     {
       name: '地形展示',
       path: 'terrian',
-      icon: 'icon-incident',
+      icon: 'icon-terrain',
       background: '#B8B260',
     },
   ];
