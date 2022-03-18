@@ -61,6 +61,12 @@
       icon: 'icon-terrain',
       background: '#B8B260',
     },
+    {
+      name: '地理工具',
+      path: 'gdal',
+      icon: 'icon-tools',
+      background: '#C8B260',
+    },
   ];
 
   const menuItemClick = (path: string) => {

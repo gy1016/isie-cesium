@@ -15,9 +15,11 @@
     "axios": "^0.26.0",
     "cesium": "^1.90.0",
     "element-plus": "^2.0.3",
+    "gdal3.js": "^2.0.2",
     "leaflet": "^1.7.1",
     "ol": "^6.13.0",
     "pinia": "^2.0.11",
+    "rollup": "^2.25.0",
     "supercluster": "^7.1.4",
     "three": "^0.138.0",
     "vue": "^3.2.25",
@@ -46,6 +48,7 @@
     "vite": "^2.8.0",
     "vite-plugin-cesium": "^1.2.13",
     "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-static-copy": "^0.4.1",
     "vue-tsc": "^0.29.8"
   }
 }
