@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
   import { ref } from 'vue';
-  import initGdalJs from '@/utils/gdal/gdal3.js';
+  import initGdalJs from 'gdal3.js';
 
   interface IGdalToolProps {
     key: number;
