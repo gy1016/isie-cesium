@@ -9,7 +9,14 @@
 
 <script lang="ts" setup>
   import { ref } from 'vue';
-  import initGdalJs from 'gdal3.js';
+
+  let gdal;
+  initGdalJs({ path: 'https://cdn.jsdelivr.net/npm/gdal3.js@2.0.2/dist/package', useWorker: false }).then((Gdal) => {
+      const count = Object.keys(Gdal.drivers.raster).length + Object.keys(Gdal.drivers.vector).length;
+      console.log(Gdal.drivers);
+      window.gdal = Gdal;
+      gdal = Gdal;
+  });
 
   interface IGdalToolProps {
     key: number;
