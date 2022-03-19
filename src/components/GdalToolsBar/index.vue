@@ -91,7 +91,7 @@
         getDataInfo(result);
         break;
       case 4:
-        getDataInfo(result);
+        wrapRaster(result);
         break;
       default:
         console.log('no function selected');
@@ -125,6 +125,15 @@
     // 直接下载文件梭哈
     saveAs(new Blob([geojsonStr]), 'output.geojson');
     console.log(JSON.parse(geojsonStr));
+  }
+
+  async function wrapRaster(result) {
+    const srcRasterDs = result.datasets[0];
+    const options = ['-of', 'PNG', '-t_srs', 'EPSG:4326'];
+    const output = await Gdal.gdalwarp(srcRasterDs, options);
+    const bytes = await Gdal.getFileBytes(output);
+    // 直接下载文件梭哈
+    saveAs(new Blob([bytes.buffer]), 'output.png');
   }
 </script>
 
