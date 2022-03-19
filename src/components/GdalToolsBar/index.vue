@@ -57,6 +57,12 @@
       label: '栅格转换',
       icon: 'icon-convert',
     },
+    {
+      key: 5,
+      name: 'vectorToRaster',
+      label: '矢量转栅格',
+      icon: 'icon-convert',
+    },
   ];
 
   function toolClick(key) {
@@ -92,6 +98,9 @@
         break;
       case 4:
         wrapRaster(result);
+        break;
+      case 5:
+        vectorToRaster(result);
         break;
       default:
         console.log('no function selected');
@@ -134,6 +143,15 @@
     const bytes = await Gdal.getFileBytes(output);
     // 直接下载文件梭哈
     saveAs(new Blob([bytes.buffer]), 'output.png');
+  }
+
+  async function vectorToRaster(result) {
+    const srcRasterDs = result.datasets[0];
+    const options = ['-of', 'GTiff', '-tr', '256', '256', '-co', 'alpha=yes'];
+    const output = await Gdal.gdal_rasterize(srcRasterDs, options);
+    const bytes = await Gdal.getFileBytes(output);
+    // 直接下载文件梭哈
+    saveAs(new Blob([bytes.buffer]), 'output.tif');
   }
 </script>
 
