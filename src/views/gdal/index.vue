@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-  import GdalToolsBar from '@/components/GdalToolsBar.vue';
+  import GdalToolsBar from '@/components/GdalToolsBar/index.vue';
 </script>
 
 <style lang="scss" scoped></style>
