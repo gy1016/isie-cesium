@@ -10,6 +10,7 @@
 
 <script setup>
   import { ref } from 'vue';
+  import { saveAs } from 'file-saver';
   import InfoList from './InfoList.vue';
 
   const GdalPath = 'https://cdn.jsdelivr.net/npm/gdal3.js@2.0.2/dist/package';
@@ -86,6 +87,12 @@
       case 2:
         convertToGeojson(result);
         break;
+      case 3:
+        getDataInfo(result);
+        break;
+      case 4:
+        getDataInfo(result);
+        break;
       default:
         console.log('no function selected');
     }
@@ -114,8 +121,10 @@
     const options = ['-f', 'GeoJSON', '-t_srs', 'EPSG:4326'];
     const output = await Gdal.ogr2ogr(shpZip, options);
     const bytes = await Gdal.getFileBytes(output);
-    const geojson = JSON.parse(String.fromCharCode.apply(null, bytes));
-    console.log(geojson);
+    const geojsonStr = String.fromCharCode.apply(null, bytes);
+    // 直接下载文件梭哈
+    saveAs(new Blob([geojsonStr]), 'output.geojson');
+    console.log(JSON.parse(geojsonStr));
   }
 </script>
 
