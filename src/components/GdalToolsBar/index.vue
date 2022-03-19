@@ -74,9 +74,23 @@
   }
 
   async function gdalProcess(mode, fileList) {
-    // console.log(Gdal, fileList);
     const result = await Gdal.open(fileList);
-    // console.log(result, result.dataset, typeof result.dataset);
+    switch (mode) {
+      case 1:
+        getDataInfo(result);
+        break;
+      case 2:
+        convertShpfile(result);
+        break;
+      default:
+        console.log('no function selected');
+    }
+    console.log('gdalProcess finish!');
+    return result;
+  }
+
+  // 获取shp类型文件信息
+  async function getDataInfo(result) {
     for await (let r of result.datasets) {
       let info = Gdal.getInfo(r);
       info.then((res) => {
@@ -87,6 +101,16 @@
     infoResults.value.forEach((info, idx) => {
       console.log(info, idx);
     });
+  }
+
+  // 将shp.zip转成geojson
+  // 这个只支持输入一个文件吧
+  async function convertShpfile(result) {
+    const shpZip = result.datasets[0];
+    const options = ['-f', 'GeoJSON', '-t_srs', 'EPSG:4326'];
+    const output = await Gdal.ogr2ogr(mbTilesDataset, options);
+    const bytes = await Gdal.getFileBytes(output);
+    console.log(bytes);
   }
 </script>
 
