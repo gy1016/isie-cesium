@@ -12,6 +12,10 @@
   import { ref } from 'vue';
   import InfoList from './InfoList.vue';
 
+  const GdalPath = 'https://cdn.jsdelivr.net/npm/gdal3.js@2.0.2/dist/package';
+  // 'https://cdn.jsdelivr.net/npm/gdal3.js@2.0.2/dist/package'
+  // 'https://static.hotdry.top/npm/gdal3.js'
+
   let Gdal;
   // 1 -> shpInfo;  2 -> shpConvert;  3 -> rashterInfo;  4 -> rasterConvert;
   let fucMode = ref(null);
@@ -66,7 +70,7 @@
       gdalProcess(fucMode.value, fileList);
     } else {
       Gdal = await initGdalJs({
-        path: 'https://cdn.jsdelivr.net/npm/gdal3.js@2.0.2/dist/package',
+        path: GdalPath,
         useWorker: false,
       });
       gdalProcess(fucMode.value, fileList);
@@ -80,7 +84,7 @@
         getDataInfo(result);
         break;
       case 2:
-        convertShpfile(result);
+        convertToGeojson(result);
         break;
       default:
         console.log('no function selected');
@@ -105,12 +109,13 @@
 
   // 将shp.zip转成geojson
   // 这个只支持输入一个文件吧
-  async function convertShpfile(result) {
+  async function convertToGeojson(result) {
     const shpZip = result.datasets[0];
     const options = ['-f', 'GeoJSON', '-t_srs', 'EPSG:4326'];
-    const output = await Gdal.ogr2ogr(mbTilesDataset, options);
+    const output = await Gdal.ogr2ogr(shpZip, options);
     const bytes = await Gdal.getFileBytes(output);
-    console.log(bytes);
+    const geojson = JSON.parse(String.fromCharCode.apply(null, bytes));
+    console.log(geojson);
   }
 </script>
 
