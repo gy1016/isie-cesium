@@ -130,10 +130,8 @@
     const options = ['-f', 'GeoJSON', '-t_srs', 'EPSG:4326'];
     const output = await Gdal.ogr2ogr(shpZip, options);
     const bytes = await Gdal.getFileBytes(output);
-    const geojsonStr = String.fromCharCode.apply(null, bytes);
     // 直接下载文件梭哈
-    saveAs(new Blob([geojsonStr]), 'output.geojson');
-    console.log(JSON.parse(geojsonStr));
+    saveAs(new Blob([bytes.buffer]), 'output.geojson');
   }
 
   async function wrapRaster(result) {
