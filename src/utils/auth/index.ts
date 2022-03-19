@@ -14,7 +14,8 @@ export const removeToken = () => window.localStorage.removeItem(localStorageKey)
 
 export const isAuthenticated = async () => {
   if (isExist()) {
-    const { data }: any = await verify();
+    const { statusCode, data }: any = await verify();
+    if (statusCode === 401) return false;
     const userInfoStore = useUserInfoStore();
     userInfoStore.initUserInfo(data);
     return data ?? false;
